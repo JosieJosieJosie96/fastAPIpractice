@@ -1,15 +1,18 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-import secrets
+from datetime import timedelta, datetime
+from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from starlette import status
+from database import SessionLocal
+from models import Users
+from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from jose import jwt, JWTError
 
-security = HTTPBasic()
+router = APIRouter (
+    prefix = '/auth',
+    tags= ['auth']
+)
 
-def authenticate(credentials: HTTPBasicCredentials = Depends(security)):
-    if not (secrets.compare_digest(credentials.username, "admin") and
-            secrets.compare_digest(credentials.password, "secret")):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    return credentials.username
+SECRET_KEY = 
